@@ -7,12 +7,12 @@ def extract_pdf_text(file_path):
     with open(file_path, "rb") as file:
         pdf_reader = PyPDF2.PdfReader(file)
 
-        text = ""
+        text = []
         num_pages = len(pdf_reader.pages)
 
         for page_num in range(num_pages):
             page = pdf_reader.pages[page_num]
-            text += page.extract_text()
+            text.append(page.extract_text())
 
         return text
 
@@ -31,22 +31,26 @@ def get_summary(text):
             ・要点3
             '''"""
 
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        # model="gpt-4",
-        messages=[
-            {'role': 'system', 'content':system},
-            {'role':'user', 'content':text}
-        ],
-        temperature=0.25,
-    )
-    summary = response['choices'][0]['message']['content']
+    summary = []
+    for page in text:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            # model="gpt-4",
+            messages=[
+                {'role': 'system', 'content':system},
+                {'role':'user', 'content':page}
+            ],
+            temperature=0.25,
+        )
+        summary.append(response['choices'][0]['message']['content'])
     return summary
 
 
 def save_text_to_file(text, output_file):
     with open(output_file, "w") as file:
-        file.write(text)
+        for page in text: 
+            file.write(page)
+            file.write('\n\n')
 
 
 if __name__ == "__main__":
