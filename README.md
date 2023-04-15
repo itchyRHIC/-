@@ -7,5 +7,7 @@ PyPDFでテキスト情報をPDFから抽出してページ毎にOpenAIに要約
 OpenAIのAPIは従量課金制なのでページ数には注意してください。
 
 利用前にOpenAIのAPIキーの取得と二つのライブラリ（PyPDF2とopenai）のインストールをしてください。
+
 pip3 install PyPDF2
+
 pip3 install openai
